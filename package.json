@@ -6,7 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --display-chunks --progress",
     "clean": "./node_modules/.bin/del-cli ./target",
-    "dev": "NODE_ENV=development webpack-dev-server --inline --progress --profile --colors --watch --display-error-details --display-cached --hot",
+    "dev": "NODE_ENV=development webpack-dev-server --config=webpack/webpack.dev.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --hot",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +33,8 @@
     "bootstrap-loader": "^1.0.10",
     "css-loader": "^0.23.1",
     "del-cli": "^0.2.0",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.21.0",
     "jquery": "^3.0.0",
     "node-sass": "^3.7.0",

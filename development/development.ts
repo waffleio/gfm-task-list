@@ -1,7 +1,10 @@
 import './development.scss';
 import '../src/main';
+import * as request from 'superagent';
 
-const request = require('superagent');
+const html = require('html!./test.html');
+
+$('body').append(html);
 
 $('.render-btn').click( () => {
   const markdown = $('.source').val();

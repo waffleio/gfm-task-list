@@ -6,7 +6,6 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 const webpack = require('webpack');
 
 module.exports = {
-
   devServer: {
     historyApiFallback: true,
     port: 3000,
