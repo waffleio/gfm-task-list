@@ -1,0 +1,7 @@
+{
+  "globalDependencies": {
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "node": "registry:dt/node#6.0.0+20160613154055",
+    "superagent": "registry:dt/superagent#1.4.0+20160317120654"
+  }
+}

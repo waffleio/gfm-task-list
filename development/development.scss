@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  height: 60vh;
+  min-height: 110px;
+
+  .source {
+    border:1px solid black;
+    flex: 1 50%;
+    margin-right: 10px;
+  }
+
+  .output {
+    flex: 1 50%;
+    border: 1px solid black;
+    overflow-y: scroll;
+  }
+}
+
+.render-btn {
+  margin: 0 0 20px;
+  padding: 3px 6px;
+  font-size: 1.2rem;
+}
