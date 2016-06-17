@@ -18,10 +18,16 @@ $('.render-btn').click( () => {
         text: markdown
       })
       .end((err, res) => {
+        if (err) {
+          console.error(err);
+        }
         $('.output').html(res.text);
-        $('.output').gfmTaskList({
+        $('.container').gfmTaskList({
           markdownContainer: '.source',
-          renderedContainer: '.output'
+          renderedContainer: '.output',
+          onUpdate: (updatedMarkdown: String) => {
+            console.log('onUpdate was called!');
+          }
         });
       });
   }

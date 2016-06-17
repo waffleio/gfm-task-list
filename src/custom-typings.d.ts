@@ -1,11 +1,11 @@
 declare const GH_ACCESS_TOKEN:string;
 
-interface gfmSettings {
-  markdownContainer: string;
-  renderedContainer: string;
+interface GFMTaskListSettings {
+  markdownContainer: string | JQuery;
+  renderedContainer: string | JQuery;
+  onUpdate(markdown:string) : void;
 }
 
 interface JQuery {
-    gfmTaskList(): JQuery;
-    gfmTaskList(settings:gfmSettings): JQuery;
+  gfmTaskList(settings:GFMTaskListSettings): JQuery;
 }
