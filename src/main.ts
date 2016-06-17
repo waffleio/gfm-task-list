@@ -69,6 +69,19 @@ namespace JQuery {
       .find('.task-list-item').addClass('enabled')
       .find('.task-list-item-checkbox').attr('disabled', null);
 
+    $renderedContainer.find('.task-list-item').prepend(`
+      <span class="handle">
+        <svg class="drag-handle" aria-hidden="true" width="16" height="15" version="1.1" viewBox="0 0 16 15">
+          <path d="M12,4V5H4V4h8ZM4,8h8V7H4V8Zm0,3h8V10H4v1Z"></path>
+        </svg>
+      </span>
+    `);
+
+    $('.task-list-item').hover(
+      (event) => $(event.target).find('.handle').addClass('hovered'),
+      (event) => $(event.target).find('.handle').removeClass('hovered')
+    );
+
     $container.trigger('tasklist:enabled');
   }
 
