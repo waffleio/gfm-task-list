@@ -4,7 +4,7 @@
   "description": "JavaScript module for enabling GFM task lists for third-party integrations to GitHub",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production ./node_modules/.bin/webpack --display-chunks --progress",
+    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config=webpack/webpack.prod.config.js --display-chunks --progress",
     "clean": "./node_modules/.bin/del-cli ./dist",
     "clean:deps": "./node_modules/.bin/del-cli node_modules typings",
     "dev": "NODE_ENV=development webpack-dev-server --config=webpack/webpack.dev.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --hot",

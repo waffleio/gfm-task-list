@@ -47,19 +47,21 @@ namespace JQuery {
     return updatedMarkdown.join('\n');
   };
 
-  const updateTaskList = ($item:JQuery) : void => {
+  const updateTaskList = ($item:JQuery) : string => {
     const index = 1 + $container.find('.task-list-item-checkbox').index($item);
     const checked = $item.prop('checked');
     const event = $.Event('tasklist:change');
-    const updatedMarkdown = updateTaskListItem($markdownContainer.val(), index, checked);
 
     $markdownContainer.trigger(event, [index, checked]);
 
-    if (!event.isDefaultPrevented()) {
-      $markdownContainer.val(updatedMarkdown);
-      $markdownContainer.trigger('change');
-      $markdownContainer.trigger('tasklist:changed', [index, checked]);
-    }
+    const updatedMarkdown = updateTaskListItem($markdownContainer.val(), index, checked);
+
+    if (event.isDefaultPrevented()) return;
+
+    $markdownContainer.val(updatedMarkdown);
+    $markdownContainer.trigger('change');
+    $markdownContainer.trigger('tasklist:changed', [index, checked]);
+    return updatedMarkdown;
   };
 
   const enableTaskLists = () : void => {
@@ -79,8 +81,8 @@ namespace JQuery {
     enableTaskLists();
 
     $renderedContainer.on('change', '.task-list-item-checkbox', (event) => {
-      debugger;
-      updateTaskList($(event.target));
+      const update = updateTaskList($(event.target));
+      if (update) onUpdate(update);
     });
 
     return this;
