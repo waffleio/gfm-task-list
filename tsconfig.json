@@ -18,6 +18,7 @@
   "files": [
     "./typings/index.d.ts",
     "development/development.ts",
+    "spec/spec-global.ts",
     "spec/main-spec.ts",
     "src/custom-typings.d.ts",
     "src/main.ts"

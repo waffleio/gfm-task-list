@@ -8,9 +8,12 @@
     "prebuild": "npm run clean",
     "clean": "./node_modules/.bin/del-cli ./dist",
     "clean:deps": "./node_modules/.bin/del-cli node_modules typings",
+    "preclean:install": "npm run clean:deps",
+    "clean:install": "npm install",
     "dev": "NODE_ENV=development webpack-dev-server --config=webpack/webpack.dev.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --hot",
     "postinstall": "./node_modules/.bin/typings install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start ./spec/karma.conf.js --single-run",
+    "test:watch": "karma start ./spec/karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -40,6 +43,8 @@
     "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.21.0",
     "jquery": "^3.0.0",
+    "karma": "^0.13.22",
+    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-mocha": "^1.0.1",
     "karma-spec-reporter": "0.0.26",

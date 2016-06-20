@@ -1,39 +1,59 @@
-const webpack = require('webpack');
-
 module.exports = function(config) {
-  browsers: ['Chrome'],
+  config.set({
+    autoWatch: true,
 
-  colors: true,
+    basePath: '..',
 
-  files: [
-    'spec/*.ts'
-  ],
+    browsers: ['Chrome'],
 
-  frameworks: ['mocha'],
+    colors: true,
 
-  plugins: [
-    require("karma-mocha"),
-    require("karma-spec-reporter"),
-    require("karma-chrome-launcher")
-  ],
+    concurrency: Infinity,
 
-  port: 9876,
+    exclude: [],
 
-  preprocessors: {
-    'spec/*': ['webpack']
-  },
+    files: [
+      'spec/spec-helper.ts',
+      'spec/**/*spec.ts'
+    ],
 
-  reporters: ['spec'],
+    frameworks: ['mocha'],
 
-  webpack: {
-    resolve: {
-      extensions: ["", ".js", ".ts"]
+    logLevel: config.LOG_INFO,
+
+    plugins: [
+      require("karma-webpack"),
+      require("karma-mocha"),
+      require("karma-spec-reporter"),
+      require("karma-chrome-launcher")
+    ],
+
+    port: 9876,
+
+    preprocessors: {
+      'spec/**/*.ts': ['webpack']
     },
-    module: {
-      loaders: [
-        { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
-        { test: /\.ts$/, loader: 'awesome-typescript-loader' }
-      ]
+
+    reporters: ['dots'],
+
+    singleRun: false,
+
+    webpack: {
+      resolve: {
+        extensions: ["", ".js", ".ts"]
+      },
+      module: {
+        loaders: [
+          { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+          { test: /\.ts$/, loader: 'awesome-typescript-loader' }
+        ]
+      }
+    },
+
+    webpackMiddleware: {
+        // webpack-dev-middleware configuration
+        // i. e.
+        noInfo: true
     }
-  }
-};
+  });
+}
