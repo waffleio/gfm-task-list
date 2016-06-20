@@ -3,31 +3,31 @@ const path = require('path');
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const WebpackMerge = require('webpack-merge');
 
-module.exports = {
+const baseFilename = 'gfm-task-lists';
+
+const baseConfig = {
   entry: './src/main.ts',
 
   output: {
-    filename: 'bundle.js',
     path: path.resolve('./dist')
   },
+
+  devtool: 'sourcemap',
 
   externals: [ 'jquery' ],
 
   module: {
     loaders: [
-      { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader") },
       { test: /\.ts$/, loader: 'awesome-typescript-loader' }
     ]
   },
 
   plugins: [
-    new ProvidePlugin({ $: 'jquery' }),
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: {
-          except: ['$', 'exports', 'require']
-      }
-    })
+    new ProvidePlugin({ $: 'jquery' })
   ],
 
   resolve: {
@@ -36,3 +36,28 @@ module.exports = {
     root: path.resolve('.')
   }
 };
+
+const unminConfig = WebpackMerge(baseConfig, {
+  output: {
+    filename: `${baseFilename}.js`
+  },
+  plugins: [
+    new ExtractTextPlugin(`${baseFilename}.css`)
+  ]
+});
+
+const minConfig = WebpackMerge(baseConfig, {
+  output: {
+    filename: `${baseFilename}.min.js`
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: {
+          except: ['$', 'exports', 'require']
+      }
+    }),
+    new ExtractTextPlugin(`${baseFilename}.min.css`)
+  ]
+});
+
+module.exports = [unminConfig, minConfig];

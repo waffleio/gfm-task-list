@@ -26,7 +26,7 @@ $('.render-btn').click( () => {
           markdownContainer: '.source',
           renderedContainer: '.output',
           onUpdate: (updatedMarkdown: String) => {
-            console.log('onUpdate was called!');
+            console.log('onUpdate called:', updatedMarkdown);
           }
         });
       });
