@@ -2,19 +2,19 @@ import './main.scss';
 
 class GFMTaskList {
   static name:string;
-  incomplete:string = "[ ]";
-  complete:string = "[x]";
+  private incomplete:string = "[ ]";
+  private complete:string = "[x]";
 
-  incompletePattern:RegExp = RegExp(this.escapePattern(this.incomplete));
-  completePattern:RegExp = RegExp(this.escapePattern(this.complete));
-  itemPattern:RegExp = RegExp(`^(?:\\s*[-+*]|(?:\\d+\\.))?\\s*(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)})(?=\\s)`);
-  codeFencesPattern:RegExp = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/mg;
-  itemsInParasPattern:RegExp = RegExp(`^(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)}).+$`, 'g');
+  private incompletePattern:RegExp = RegExp(this.escapePattern(this.incomplete));
+  private completePattern:RegExp = RegExp(this.escapePattern(this.complete));
+  private itemPattern:RegExp = RegExp(`^(?:\\s*[-+*]|(?:\\d+\\.))?\\s*(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)})(?=\\s)`);
+  private codeFencesPattern:RegExp = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/mg;
+  private itemsInParasPattern:RegExp = RegExp(`^(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)}).+$`, 'g');
 
-  $element:JQuery;
-  $markdownContainer:JQuery;
-  $renderedContainer:JQuery;
-  onUpdate:any;
+  private $element:JQuery;
+  private $markdownContainer:JQuery;
+  private $renderedContainer:JQuery;
+  private onUpdate:any;
 
   constructor ($element:JQuery, settings:GFMTaskListSettings) {
     this.$element = $element;

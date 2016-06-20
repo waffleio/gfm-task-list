@@ -16,9 +16,10 @@
     "forkChecker": true
   },
   "files": [
-    "src/main.ts",
+    "./typings/index.d.ts",
     "development/development.ts",
+    "spec/main-spec.ts",
     "src/custom-typings.d.ts",
-    "./typings/index.d.ts"
+    "src/main.ts"
   ]
 }
