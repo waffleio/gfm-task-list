@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  config.set({
+  const configuration = {
     autoWatch: true,
 
     basePath: '..',
@@ -9,6 +9,13 @@ module.exports = function(config) {
     colors: true,
 
     concurrency: Infinity,
+
+    customLaunchers: {
+      Chrome_Travis_CI: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
 
     exclude: [],
 
@@ -51,9 +58,13 @@ module.exports = function(config) {
     },
 
     webpackMiddleware: {
-        // webpack-dev-middleware configuration
-        // i. e.
-        noInfo: true
+      noInfo: true
     }
-  });
+  };
+
+  if (process.env.TRAVIS) {
+    configuration.browsers = ['Chrome_Travis_CI'];
+  }
+
+  config.set(configuration);
 }
