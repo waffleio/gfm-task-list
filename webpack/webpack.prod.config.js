@@ -17,7 +17,9 @@ const baseConfig = {
 
   devtool: 'sourcemap',
 
-  externals: [ 'jquery' ],
+  externals: {
+    'jquery': 'jQuery'
+  },
 
   module: {
     loaders: [

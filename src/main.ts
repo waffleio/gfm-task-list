@@ -1,43 +1,73 @@
 import './main.scss';
 
-namespace JQuery {
-  let $container: JQuery;
-  let $markdownContainer: JQuery;
-  let $renderedContainer: JQuery;
+class GFMTaskList {
+  static name:string;
+  incomplete:string = "[ ]";
+  complete:string = "[x]";
 
-  const incomplete = "[ ]";
-  const complete = "[x]";
+  incompletePattern:RegExp = RegExp(this.escapePattern(this.incomplete));
+  completePattern:RegExp = RegExp(this.escapePattern(this.complete));
+  itemPattern:RegExp = RegExp(`^(?:\\s*[-+*]|(?:\\d+\\.))?\\s*(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)})(?=\\s)`);
+  codeFencesPattern:RegExp = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/mg;
+  itemsInParasPattern:RegExp = RegExp(`^(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)}).+$`, 'g');
 
-  const escapePattern = function(str) {
-    return str
-      .replace(/([\[\]])/g, '\\$1')
-      .replace(/\s/, '\\s')
-      .replace('x', '[xX]');
-  };
+  $element:JQuery;
+  $markdownContainer:JQuery;
+  $renderedContainer:JQuery;
+  onUpdate:any;
 
-  const incompletePattern = RegExp(escapePattern(incomplete));
-  const completePattern = RegExp(escapePattern(complete));
-  const itemPattern = RegExp(`^(?:\\s*[-+*]|(?:\\d+\\.))?\\s*(${escapePattern(complete)}|${escapePattern(incomplete)})(?=\\s)`);
-  const codeFencesPattern = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/mg;
-  const itemsInParasPattern = RegExp(`^(${escapePattern(complete)}|${escapePattern(incomplete)}).+$`, 'g');
+  constructor ($element:JQuery, settings:GFMTaskListSettings) {
+    this.$element = $element;
+    this.$markdownContainer = this.$element.find(<JQuery>settings.markdownContainer);
+    this.$renderedContainer = this.$element.find(<JQuery>settings.renderedContainer);
 
-  const updateTaskListItem = (source:string, itemIndex:number, checked:boolean) : string => {
+    this.onUpdate = (event:JQueryEventObject) => {
+      const update:string = this.updateTaskList($(event.target));
+      if (update) settings.onUpdate(update);
+    };
+
+    this.$renderedContainer.on('change', '.task-list-item-checkbox', this.onUpdate);
+
+    this.enable()
+  }
+
+  public destroy () : void {
+    this.$renderedContainer.off('change', '.task-list-item-checkbox', this.onUpdate);
+  }
+
+  public enable () : void {
+    this.$renderedContainer
+      .find('.task-list-item').addClass('enabled')
+      .find('.task-list-item-checkbox').attr('disabled', null);
+
+    this.$element.trigger('tasklist:enabled');
+  }
+
+  public disable () : void {
+    this.$renderedContainer
+      .find('.task-list-item').removeClass('enabled')
+      .find('.task-list-item-checkbox').attr('disabled', 'disabled');
+
+    this.$element.trigger('tasklist:disabled');
+  }
+
+  private updateTaskListItem (source:string, itemIndex:number, checked:boolean) : string {
     const clean:string[] = source
       .replace(/\r/g, '')
-      .replace(codeFencesPattern, '')
-      .replace(itemsInParasPattern, '')
+      .replace(this.codeFencesPattern, '')
+      .replace(this.itemsInParasPattern, '')
       .split("\n");
 
     let index:number = 0;
     const updatedMarkdown = [];
     for (let line of source.split('\n')) {
-      if (clean.indexOf(line) >= 0 && itemPattern.test(line)) {
+      if (clean.indexOf(line) >= 0 && this.itemPattern.test(line)) {
         index++;
         if (index === itemIndex) {
           if (checked) {
-            line = line.replace(incompletePattern, complete);
+            line = line.replace(this.incompletePattern, this.complete);
           } else {
-            line = line.replace(completePattern, incomplete);
+            line = line.replace(this.completePattern, this.incomplete);
           }
         }
       }
@@ -47,43 +77,55 @@ namespace JQuery {
     return updatedMarkdown.join('\n');
   };
 
-  const updateTaskList = ($item:JQuery) : string => {
-    const index = 1 + $container.find('.task-list-item-checkbox').index($item);
+  private updateTaskList ($item : JQuery) : string {
+    const index = 1 + this.$renderedContainer.find('.task-list-item-checkbox').index($item);
     const checked = $item.prop('checked');
     const event = $.Event('tasklist:change');
 
-    $markdownContainer.trigger(event, [index, checked]);
-
-    const updatedMarkdown = updateTaskListItem($markdownContainer.val(), index, checked);
+    this.$element.trigger(event, [index, checked]);
 
     if (event.isDefaultPrevented()) return;
 
-    $markdownContainer.val(updatedMarkdown);
-    $markdownContainer.trigger('change');
-    $markdownContainer.trigger('tasklist:changed', [index, checked]);
+    const updatedMarkdown = this.updateTaskListItem(this.$markdownContainer.val(), index, checked);
+
+    this.$markdownContainer.val(updatedMarkdown);
+    this.$markdownContainer.trigger('change');
+    this.$markdownContainer.trigger('tasklist:changed', [index, checked]);
     return updatedMarkdown;
   };
 
-  const enableTaskLists = () : void => {
-    $renderedContainer
-      .find('.task-list-item').addClass('enabled')
-      .find('.task-list-item-checkbox').attr('disabled', null);
-
-    $container.trigger('tasklist:enabled');
+  private escapePattern (str) {
+    return str
+      .replace(/([\[\]])/g, '\\$1')
+      .replace(/\s/, '\\s')
+      .replace('x', '[xX]');
   }
+}
 
-  $.fn.gfmTaskList = function (settings:GFMTaskListSettings) : JQuery {
-    $container = this;
-    $markdownContainer = $(settings.markdownContainer);
-    $renderedContainer = $(settings.renderedContainer);
-    const onUpdate = settings.onUpdate;
+namespace jQuery {
+  $.fn.gfmTaskList = function (action:string|GFMTaskListSettings) : JQuery {
+    let instance = $.data(this, GFMTaskList.name);
 
-    enableTaskLists();
+    if (typeof action === 'string') {
+      if (!instance) {
+        throw new Error("Must construct gfmTaskList before calling methods on it.");
+      }
 
-    $renderedContainer.on('change', '.task-list-item-checkbox', (event) => {
-      const update = updateTaskList($(event.target));
-      if (update) onUpdate(update);
-    });
+      instance[action]();
+      return this;
+    }
+
+    let settings:GFMTaskListSettings;
+    if (typeof action === 'object') {
+      settings = <GFMTaskListSettings>action;
+      action = undefined;
+    } else {
+      throw new Error("Must pass an object to $.fn.gfmTaskList().");
+    }
+
+    if (instance) instance.destroy();
+
+    instance = $.data(this, GFMTaskList.name, new GFMTaskList(this, settings));
 
     return this;
   }
