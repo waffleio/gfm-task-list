@@ -1,3 +1,6 @@
+const DefinePlugin = require('webpack/lib/DefinePlugin');
+const ProvidePlugin = require('webpack/lib/ProvidePlugin');
+
 module.exports = function(config) {
   const configuration = {
     autoWatch: true,
@@ -54,7 +57,11 @@ module.exports = function(config) {
           { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
           { test: /\.ts$/, loader: 'awesome-typescript-loader' }
         ]
-      }
+      },
+      plugins: [
+        new DefinePlugin({ GH_ACCESS_TOKEN: JSON.stringify(process.env.GH_ACCESS_TOKEN) }),
+        new ProvidePlugin({ $: 'jquery' })
+      ]
     },
 
     webpackMiddleware: {
