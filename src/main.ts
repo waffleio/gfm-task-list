@@ -22,13 +22,14 @@ class GFMTaskList {
     this.$renderedContainer = this.$element.find(<JQuery>settings.renderedContainer);
 
     this.onUpdate = (event: JQueryEventObject) => {
+      console.log(event);
       const update: string = this.updateTaskList($(event.target));
       if (update) settings.onUpdate(update);
     };
 
     this.$renderedContainer.on('change', '.task-list-item-checkbox', this.onUpdate);
 
-    this.enable()
+    this.enable();
   }
 
   public destroy () : void {

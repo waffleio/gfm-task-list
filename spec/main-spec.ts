@@ -3,9 +3,9 @@ import '../src/main';
 import * as request from 'superagent';
 
 describe('GFMTaskLists', () => {
-  let $element:JQuery;
+  let $element: JQuery;
 
-  const markdown:[string] = [
+  const markdown: [string] = [
     "- [ ] item 1",
     "- [ ] item 2",
     "  - [ ] nested 1",
@@ -43,8 +43,55 @@ describe('GFMTaskLists', () => {
 
   it('enables task lists', (done) => {
     renderMarkdown(() => {
-      console.log($element.find('.rendered-markdown').html());
-      done()
+      const html = $element.find('.rendered-markdown').html();
+      console.log(html);
+      done();
     });
   });
+
+  it('disables task lists', (done) => {
+    renderMarkdown(() => {
+      $element.gfmTaskList({
+        markdownContainer: '.markdown-editor',
+        renderedContainer: '.rendered-markdown',
+        onUpdate: (updatedMarkdown) => {}
+      });
+
+      $element.gfmTaskList('disable');
+
+      const checkboxes = $element.find('.rendered-markdown .task-list-item-checkbox');
+      checkboxes.each((key, value) => {
+        $(value).attr('disabled').should.equal('disabled');
+      });
+
+      done();
+    });
+  });
+
+  describe('clicking a rendered checkbox', () => {
+    it('updates markdown when rendered checkbox is checked', (done) => {
+      renderMarkdown(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: (updatedMarkdown) => {}
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').eq(0);
+        firstCheckbox.trigger('change')
+
+        done();
+      });
+    });
+
+    it('updates markdown when rendered checkbox is un-checked')
+
+    it('updates correct checkbox when value is duplicated between items in same list')
+
+    it('updates correct checkbox when value is duplicated between items in separate lists')
+  });
+
+  it('throws if instance is missing when calling gfmTaskList methods')
+
+  it('throws if no object is passed to constructor')
 });
