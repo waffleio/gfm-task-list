@@ -3,7 +3,7 @@ const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const path = require('path');
 
 module.exports = function(config) {
-  const configuration = {
+  config.set({
     autoWatch: true,
 
     basePath: '.',
@@ -13,13 +13,6 @@ module.exports = function(config) {
     colors: true,
 
     concurrency: Infinity,
-
-    customLaunchers: {
-      Chrome_Travis_CI: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
-    },
 
     exclude: [],
 
@@ -34,6 +27,7 @@ module.exports = function(config) {
     plugins: [
       require("karma-chai"),
       require("karma-chrome-launcher"),
+      require("karma-phantomjs-launcher"),
       require("karma-mocha"),
       require("karma-sinon"),
       require("karma-spec-reporter"),
@@ -70,11 +64,5 @@ module.exports = function(config) {
     webpackMiddleware: {
       noInfo: true
     }
-  };
-
-  if (process.env.TRAVIS) {
-    configuration.browsers = ['Chrome_Travis_CI'];
-  }
-
-  config.set(configuration);
+  });
 }

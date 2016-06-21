@@ -12,7 +12,7 @@
     "clean:install": "npm install",
     "dev": "NODE_ENV=development webpack-dev-server --config=webpack/webpack.dev.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --hot",
     "postinstall": "./node_modules/.bin/typings install",
-    "test": "karma start ./karma.conf.js --single-run",
+    "test": "karma start ./karma.conf.js --single-run --browsers PhantomJS",
     "test:watch": "karma start ./karma.conf.js"
   },
   "repository": {
@@ -48,11 +48,13 @@
     "karma-chai-plugins": "^0.7.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-mocha": "^1.0.1",
+    "karma-phantomjs-launcher": "^1.0.0",
     "karma-sinon": "^1.0.5",
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "^1.7.0",
     "mocha": "^2.5.3",
     "node-sass": "^3.7.0",
+    "phantomjs-prebuilt": "^2.1.7",
     "sass-loader": "^3.2.0",
     "sinon": "^1.17.4",
     "style-loader": "^0.13.1",
