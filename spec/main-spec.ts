@@ -1,4 +1,5 @@
 import '../src/main';
+import 'babel-polyfill';
 import * as request from 'superagent';
 import { should } from 'chai';
 
@@ -13,25 +14,27 @@ describe('GFMTaskLists', () => {
     "    - [ ] super nested 1"
   ];
 
-  const renderMarkdown = (cb) : void => {
-    $element.find('.markdown-editor').val(markdown.join('\n'));
+  const renderMarkdown = () : Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      $element.find('.markdown-editor').val(markdown.join('\n'));
 
-    request
-      .post('https://api.github.com/markdown')
-      .set('Authorization', `Bearer ${GH_ACCESS_TOKEN}`)
-      .set('Content-Type', 'application/json')
-      .send({
-        mode: 'gfm',
-        text: markdown.join('\n')
-      })
-      .end((err, res) => {
-        if (err) {
-          return cb(err, res);
-        }
+      request
+        .post('https://api.github.com/markdown')
+        .set('Authorization', `Bearer ${GH_ACCESS_TOKEN}`)
+        .set('Content-Type', 'application/json')
+        .send({
+          mode: 'gfm',
+          text: markdown.join('\n')
+        })
+        .end((err, res) => {
+          if (err) {
+            return reject(err);
+          }
 
-        $element.find('.rendered-markdown').html(res.text);
-        cb()
-      });
+          $element.find('.rendered-markdown').html(res.text);
+          return resolve();
+        });
+    });
   };
 
   before(() => {
@@ -51,10 +54,8 @@ describe('GFMTaskLists', () => {
     sandbox.restore();
   });
 
-  it('enables task lists', (done) => {
-    renderMarkdown((err) => {
-      if (err) return done(err);
-
+  it('enables task lists', () => {
+    return renderMarkdown().then(() => {
       $element.gfmTaskList({
         markdownContainer: '.markdown-editor',
         renderedContainer: '.rendered-markdown',
@@ -65,15 +66,11 @@ describe('GFMTaskLists', () => {
       checkboxes.each((key, value) => {
         should().not.exist($(value).attr('disabled'));
       });
-
-      done();
     });
   });
 
-  it('disables task lists', (done) => {
-    renderMarkdown((err) => {
-      if (err) return done(err);
-
+  it('disables task lists', () => {
+    return renderMarkdown().then(() => {
       $element.gfmTaskList({
         markdownContainer: '.markdown-editor',
         renderedContainer: '.rendered-markdown',
@@ -86,21 +83,17 @@ describe('GFMTaskLists', () => {
       checkboxes.each((key, value) => {
         $(value).attr('disabled').should.equal('disabled');
       });
-
-      done();
     });
   });
 
   describe('clicking a rendered checkbox', () => {
-    it('updates markdown when rendered checkbox is checked', (done) => {
+    it('updates markdown when rendered checkbox is checked', () => {
       const updateStub = sandbox.stub();
       const expectedMarkdown = [];
       expectedMarkdown.push(...markdown);
       expectedMarkdown[0] = "- [x] item 1"
 
-      renderMarkdown((err) => {
-        if (err) return done(err);
-
+      return renderMarkdown().then(() => {
         $element.gfmTaskList({
           markdownContainer: '.markdown-editor',
           renderedContainer: '.rendered-markdown',
@@ -113,8 +106,6 @@ describe('GFMTaskLists', () => {
 
         updateStub.callCount.should.equal(1);
         updateStub.firstCall.args[0].should.equal(expectedMarkdown.join('\n'));
-
-        done();
       });
     });
 

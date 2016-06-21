@@ -6,7 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config=webpack/webpack.prod.config.js --display-chunks --progress",
     "prebuild": "npm run clean",
-    "clean": "./node_modules/.bin/del-cli ./dist",
+    "clean": "./node_modules/.bin/del-cli ./dist .cache",
     "clean:deps": "./node_modules/.bin/del-cli node_modules typings",
     "preclean:install": "npm run clean:deps",
     "clean:install": "npm install",
@@ -35,6 +35,9 @@
   "homepage": "https://github.com/waffleio/gfm-task-lists#readme",
   "devDependencies": {
     "awesome-typescript-loader": "^1.0.0",
+    "babel-core": "^6.10.4",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
     "css-loader": "^0.23.1",
     "del-cli": "^0.2.0",

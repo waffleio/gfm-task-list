@@ -52,7 +52,15 @@ module.exports = function(config) {
       module: {
         loaders: [
           { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
-          { test: /\.ts$/, loader: 'awesome-typescript-loader' }
+          {
+            test: /\.ts$/,
+            loader: 'awesome-typescript-loader',
+            query: {
+              useBabel: true,
+              useCache: true,
+              cacheDirectory: path.resolve('./.cache')
+            }
+          }
         ]
       },
       plugins: [

@@ -4,3 +4,4 @@ typings
 spec/**/*.js
 src/**/*.js
 npm-debug.log
+.cache
