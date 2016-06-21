@@ -2,6 +2,7 @@
 > This plugin is based on the work previously done on [github-archive/task_list](https://github.com/github-archive/task_list). That plugin has been deprecated and this plugin picks up where it left off.
 
 [![Build Status](https://travis-ci.org/waffleio/gfm-task-list.svg?branch=master)](https://travis-ci.org/waffleio/gfm-task-list)
+[![Open Issues](https://badge.waffle.io/waffleio/gfm-task-list.svg?label=waffle%3Ain%20progress&title=In%20Progress)](https://waffle.io/waffleio/waffle.io?source=waffleio%2Fgfm-task-list)
 
 jQuery plugin for enabling [GitHub Flavored Markdown (GFM) task lists](https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments) for third-party integrations to GitHub.
 
