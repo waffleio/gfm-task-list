@@ -1,19 +1,20 @@
 {
   "name": "gfm-task-list",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "jQuery plugin for enabling GFM task lists for third-party integrations to GitHub",
   "main": "dist/gfm-task-list.js",
   "scripts": {
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config=webpack/webpack.prod.config.js --display-chunks --progress",
-    "prebuild": "npm run clean",
-    "clean": "./node_modules/.bin/del-cli ./dist .cache",
-    "clean:deps": "./node_modules/.bin/del-cli node_modules typings",
-    "preclean:install": "npm run clean:deps",
+    "clean:deps": "./node_modules/.bin/del-cli typings node_modules",
     "clean:install": "npm install",
+    "clean": "./node_modules/.bin/del-cli ./dist .cache",
     "dev": "NODE_ENV=development webpack-dev-server --config=webpack/webpack.dev.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --hot",
     "postinstall": "./node_modules/.bin/typings install",
-    "test": "karma start ./karma.conf.js --single-run --browsers PhantomJS",
-    "test:watch": "karma start ./karma.conf.js"
+    "prebuild": "npm run clean",
+    "preclean:install": "npm run clean:deps",
+    "prepublish": "npm run build",
+    "test:watch": "karma start ./karma.conf.js",
+    "test": "karma start ./karma.conf.js --single-run --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
