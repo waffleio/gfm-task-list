@@ -1,6 +1,6 @@
 {
   "name": "gfm-task-list",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "jQuery plugin for enabling GFM task lists for third-party integrations to GitHub",
   "main": "dist/gfm-task-list.js",
   "scripts": {
