@@ -1,8 +1,8 @@
 {
-  "name": "gfm-task-lists",
+  "name": "gfm-task-list",
   "version": "0.0.1",
-  "description": "JavaScript module for enabling GFM task lists for third-party integrations to GitHub",
-  "main": "index.js",
+  "description": "jQuery plugin for enabling GFM task lists for third-party integrations to GitHub",
+  "main": "dist/gfm-task-list.js",
   "scripts": {
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config=webpack/webpack.prod.config.js --display-chunks --progress",
     "prebuild": "npm run clean",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/waffleio/gfm-task-lists.git"
+    "url": "git+https://github.com/waffleio/gfm-task-list.git"
   },
   "keywords": [
     "GitHub",
@@ -30,9 +30,9 @@
   "author": "Waffle.io",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/waffleio/gfm-task-lists/issues"
+    "url": "https://github.com/waffleio/gfm-task-list/issues"
   },
-  "homepage": "https://github.com/waffleio/gfm-task-lists#readme",
+  "homepage": "https://github.com/waffleio/gfm-task-list#readme",
   "devDependencies": {
     "awesome-typescript-loader": "^1.0.0",
     "babel-core": "^6.10.4",

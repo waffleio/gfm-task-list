@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const WebpackMerge = require('webpack-merge');
 
-const baseFilename = 'gfm-task-lists';
+const baseFilename = 'gfm-task-list';
 
 const baseConfig = {
   entry: './src/main.ts',

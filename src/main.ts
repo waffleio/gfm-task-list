@@ -118,7 +118,7 @@ namespace jQuery {
     let settings: GFMTaskListSettings;
     if (typeof action === 'object') {
       settings = <GFMTaskListSettings>action;
-      const requiredKeys = ['renderedContainer', 'markdownContainer', 'onUpdate'];
+      const requiredKeys = ['renderedContainer', 'markdownContainer'];
       const keys = Object.keys(settings);
       requiredKeys.forEach((requiredKey) => {
         if (keys.indexOf(requiredKey) === -1) {
