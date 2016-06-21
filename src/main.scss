@@ -15,6 +15,10 @@
     margin-left: -15px;
     border: 1px solid transparent;
 
+    .contains-task-list {
+      margin-top: 4px;
+    }
+
     .task-list-item-checkbox {
       margin: 0 0.2em 0.25em -1.6em;
       vertical-align: middle;
