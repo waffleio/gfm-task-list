@@ -6,7 +6,7 @@
 jQuery plugin for enabling [GitHub Flavored Markdown (GFM) task lists](https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments) for third-party integrations to GitHub.
 
 ## Getting Started
-### Install
+### Installation
 You can find the built library in [npmcdn](https://npmcdn.com). You may either download them and serve them from your app or load them directly from npmcdn.
 #### npmcdn
 ```html
@@ -91,41 +91,5 @@ Fired after a checkbox has been checked/unchecked and the associated markdown ha
 $('.container').on('tasklist:changed', function(event) {});
 ```
 
-
 ### Development
-
-If you would like to work on this project, you can follow these steps to get your development setup running.
-
-#### Installation
-
-Install the dependencies.
-
-```bash
-npm install
-```
-
-#### Development
-
-> Note: You will need a valid GitHub access token to begin developing. The development page requires you to set the `GH_ACCESS_TOKEN` environment variable. You can create a personal access token from the [tokens page](https://github.com/settings/tokens) in your GitHub account settings.
-
-The plugin and its tests are written in TypeScript. You can find the source code in `src/main.ts`. You can start up the dev server by running:
-
-```bash
-GH_ACCESS_TOKEN=<your-github-token> npm run dev
-```
-
-Navigate to [http://localhost:3000](http://localhost:3000) to see the development page. As you make changes to source code, the browser will refresh to include your changes.
-
-#### Running Tests
-
-You also need the `GH_ACCESS_TOKEN` for running the tests. Tests are located in `spec/main-spec.ts`.
-
-```bash
-GH_ACCESS_TOKEN=<your-github-token> npm run test
-```
-
-Or on a watch:
-
-```bash
-GH_ACCESS_TOKEN=<your-github-token> npm run test:watch
-```
+Please review our [contributing guidelines](https://github.com/waffleio/gfm-task-list/blob/master/CONTRIBUTING.md) for instructions on how to get started with contributing to this project.
