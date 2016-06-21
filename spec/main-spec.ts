@@ -7,14 +7,7 @@ describe('GFMTaskLists', () => {
   let $element: JQuery;
   let sandbox: Sinon.SinonSandbox;
 
-  const markdown: [string] = [
-    "- [ ] item 1",
-    "- [ ] item 2",
-    "  - [ ] nested 1",
-    "    - [ ] super nested 1"
-  ];
-
-  const renderMarkdown = () : Promise<void> => {
+  const renderMarkdown = (markdown: Array<string>) : Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       $element.find('.markdown-editor').val(markdown.join('\n'));
 
@@ -55,7 +48,12 @@ describe('GFMTaskLists', () => {
   });
 
   it('enables task lists', () => {
-    return renderMarkdown().then(() => {
+    const markdown: Array<string> = [
+      "- [ ] item 1",
+      "- [ ] item 2"
+    ];
+
+    return renderMarkdown(markdown).then(() => {
       $element.gfmTaskList({
         markdownContainer: '.markdown-editor',
         renderedContainer: '.rendered-markdown',
@@ -70,7 +68,12 @@ describe('GFMTaskLists', () => {
   });
 
   it('disables task lists', () => {
-    return renderMarkdown().then(() => {
+    const markdown: Array<string> = [
+      "- [ ] item 1",
+      "- [ ] item 2"
+    ];
+
+    return renderMarkdown(markdown).then(() => {
       $element.gfmTaskList({
         markdownContainer: '.markdown-editor',
         renderedContainer: '.rendered-markdown',
@@ -86,14 +89,24 @@ describe('GFMTaskLists', () => {
     });
   });
 
+  it('throws if instance is missing when calling gfmTaskList methods', () => {
+    const fn = () => $element.gfmTaskList('enable');
+    fn.should.throw('Must construct gfmTaskList before calling methods on it.');
+  });
+
   describe('clicking a rendered checkbox', () => {
     it('updates markdown when rendered checkbox is checked', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 2"
+      ];
+      const expectedMarkdown: Array<string> = [
+        "- [x] item 1",
+        "- [ ] item 2"
+      ];
       const updateStub = sandbox.stub();
-      const expectedMarkdown = [];
-      expectedMarkdown.push(...markdown);
-      expectedMarkdown[0] = "- [x] item 1"
 
-      return renderMarkdown().then(() => {
+      return renderMarkdown(markdown).then(() => {
         $element.gfmTaskList({
           markdownContainer: '.markdown-editor',
           renderedContainer: '.rendered-markdown',
@@ -109,22 +122,210 @@ describe('GFMTaskLists', () => {
       });
     });
 
-    it('updates markdown when rendered checkbox is un-checked')
+    it('updates markdown when rendered checkbox is un-checked', () => {
+      const markdown: Array<string> = [
+        "- [x] item 1",
+        "- [ ] item 2"
+      ];
+      const expectedMarkdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 2"
+      ];
 
-    it('updates correct checkbox when value is duplicated between items in same list')
+      const updateStub = sandbox.stub();
 
-    it('updates correct checkbox when value is duplicated between items in separate lists')
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: updateStub
+        });
 
-    it('updates correct checkbox when value is nested')
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').eq(0);
+        firstCheckbox.prop('checked', false);
+        firstCheckbox.trigger('change');
 
-    it('emits "tasklist:change" event when checkbox is clicked')
+        updateStub.callCount.should.equal(1);
+        updateStub.firstCall.args[0].should.equal(expectedMarkdown.join('\n'));
+      });
+    });
 
-    it('does not emit "tasklist:changed" event when event has "preventDefault()" called on it')
+    it('updates correct checkbox when value is duplicated between items in same list', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 1"
+      ];
+      const expectedMarkdown: Array<string> = [
+        "- [ ] item 1",
+        "- [x] item 1"
+      ];
 
-    it('does not update markdown when event has "preventDefault()" called on it')
+      const updateStub = sandbox.stub();
+
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: updateStub
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').eq(1);
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        updateStub.callCount.should.equal(1);
+        updateStub.firstCall.args[0].should.equal(expectedMarkdown.join('\n'));
+      });
+    });
+
+    it('updates correct checkbox when value is duplicated between items in separate lists', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 1",
+        " ",
+        "Another List: ",
+        "- [ ] item 1"
+      ];
+      const expectedMarkdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 1",
+        " ",
+        "Another List: ",
+        "- [x] item 1"
+      ];
+
+      const updateStub = sandbox.stub();
+
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: updateStub
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').last();
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        updateStub.callCount.should.equal(1);
+        updateStub.firstCall.args[0].should.equal(expectedMarkdown.join('\n'));
+      });
+    });
+
+    it('updates correct checkbox when value is nested', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 1",
+        "  - [ ] nested item"
+      ];
+      const expectedMarkdown: Array<string> = [
+        "- [ ] item 1",
+        "- [ ] item 1",
+        "  - [x] nested item"
+      ];
+
+      const updateStub = sandbox.stub();
+
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: updateStub
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').last();
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        updateStub.callCount.should.equal(1);
+        updateStub.firstCall.args[0].should.equal(expectedMarkdown.join('\n'));
+      });
+    });
+
+    it('emits "tasklist:change" event when checkbox is clicked but before markdown-editor is updated', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+      ];
+      const listenerStub: Sinon.SinonStub = sandbox.stub();
+
+      $element.on('tasklist:change', (...args) => {
+        $element.find('.markdown-editor').val().should.equal(markdown.join('\n'));
+        listenerStub.apply(null, args);
+      });
+
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: (markdown: string) => {}
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').first();
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        listenerStub.callCount.should.equal(1);
+        listenerStub.firstCall.args[1].should.equal(1);
+        listenerStub.firstCall.args[2].should.equal(true);
+      });
+    });
+
+    it('should emit "tasklist:changed" after markdown editor value is updated', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+      ];
+      const expectedMarkdown: Array<string> = [
+        "- [x] item 1",
+      ];
+      const listenerStub: Sinon.SinonStub = sandbox.stub();
+
+      $element.on('tasklist:changed', (...args) => {
+        $element.find('.markdown-editor').val().should.equal(expectedMarkdown.join('\n'));
+        listenerStub.apply(null, args);
+      });
+
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: (markdown: string) => {}
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').first();
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        listenerStub.callCount.should.equal(1);
+        listenerStub.firstCall.args[1].should.equal(1);
+        listenerStub.firstCall.args[2].should.equal(true);
+      });
+    });
+
+    it('does not emit "tasklist:changed" event when event has "preventDefault()" called on it', () => {
+      const markdown: Array<string> = [
+        "- [ ] item 1",
+      ];
+      const listenerStub: Sinon.SinonStub = sandbox.stub();
+
+      $element.on('tasklist:change', (event) => {
+        event.preventDefault();
+      });
+      $element.on('tasklist:changed', listenerStub);
+
+      return renderMarkdown(markdown).then(() => {
+        $element.gfmTaskList({
+          markdownContainer: '.markdown-editor',
+          renderedContainer: '.rendered-markdown',
+          onUpdate: (markdown: string) => {}
+        });
+
+        const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').first();
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        listenerStub.callCount.should.equal(0);
+        $element.find('.markdown-editor').val().should.equal(markdown.join('\n'));
+      });
+    });
   });
-
-  it('throws if instance is missing when calling gfmTaskList methods')
-
-  it('throws if no object is passed to constructor')
 });

@@ -118,6 +118,13 @@ namespace jQuery {
     let settings: GFMTaskListSettings;
     if (typeof action === 'object') {
       settings = <GFMTaskListSettings>action;
+      const requiredKeys = ['renderedContainer', 'markdownContainer', 'onUpdate'];
+      const keys = Object.keys(settings);
+      requiredKeys.forEach((requiredKey) => {
+        if (keys.indexOf(requiredKey) === -1) {
+          throw new Error(`Missing key '${requiredKey}'`);
+        }
+      })
       action = undefined;
     } else {
       throw new Error("Must pass an object to $.fn.gfmTaskList().");
