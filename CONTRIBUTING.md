@@ -2,10 +2,10 @@
 By following our contributing guidelines, you will have a much better chance of your issues and pull requests getting reviewed or merged in a timely manner.
 
 ## Reporting a bug
-Please review our [open issues](https://github.com/waffleio/gfm-task-list/issues) before submitting a new issue to make sure there is not already an issue open for your particular bug report. If there already is an issue open, feel free to join in on the conversation; otherwise, please file a new issue to inform us of the bug.
+Please review our [waffle.io board](https://waffle.io/waffleio/waffle.io?source=waffleio%2Fgfm-task-list) before submitting a new issue to make sure there is not already an issue open for your particular bug report. If there already is an issue open, feel free to join in on the conversation; otherwise, please file a new issue to inform us of the bug.
 
 ## Request a feature
-Please review our [open issues](https://github.com/waffleio/gfm-task-list/issues) before submitting a new issue to make sure there is not already an issue open for your particular feature request. If there already is an issue open, feel free to join in on the conversation; otherwise, please file a new issue requesting the feature.
+Please review our [waffle.io board](https://waffle.io/waffleio/waffle.io?source=waffleio%2Fgfm-task-list) before submitting a new issue to make sure there is not already an issue open for your particular feature request. If there already is an issue open, feel free to join in on the conversation; otherwise, please file a new issue requesting the feature.
 
 ## Development
 We love pull requests and invite you to submit your contributions! The plugin and its tests are written in TypeScript and are built with webpack. If you would like to work on this project, you can follow these steps to get your development setup running.
