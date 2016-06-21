@@ -22,7 +22,6 @@ class GFMTaskList {
     this.$renderedContainer = this.$element.find(<JQuery>settings.renderedContainer);
 
     this.onUpdate = (event: JQueryEventObject) => {
-      console.log(event);
       const update: string = this.updateTaskList($(event.target));
       if (update) settings.onUpdate(update);
     };

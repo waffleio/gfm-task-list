@@ -1,11 +1,12 @@
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
+const path = require('path');
 
 module.exports = function(config) {
   const configuration = {
     autoWatch: true,
 
-    basePath: '..',
+    basePath: '.',
 
     browsers: ['Chrome'],
 
@@ -23,19 +24,20 @@ module.exports = function(config) {
     exclude: [],
 
     files: [
-      'spec/spec-helper.ts',
-      'spec/**/*spec.ts'
+      'spec/**/*.ts'
     ],
 
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'chai', 'sinon'],
 
     logLevel: config.LOG_INFO,
 
     plugins: [
-      require("karma-webpack"),
+      require("karma-chai"),
+      require("karma-chrome-launcher"),
       require("karma-mocha"),
+      require("karma-sinon"),
       require("karma-spec-reporter"),
-      require("karma-chrome-launcher")
+      require("karma-webpack")
     ],
 
     port: 9876,
@@ -49,8 +51,9 @@ module.exports = function(config) {
     singleRun: false,
 
     webpack: {
+      output: {},
       resolve: {
-        extensions: ["", ".js", ".ts"]
+        extensions: ["", ".js", ".ts", ".d.ts"]
       },
       module: {
         loaders: [

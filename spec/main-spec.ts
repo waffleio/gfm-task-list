@@ -1,9 +1,10 @@
-import '../src/main.scss';
 import '../src/main';
 import * as request from 'superagent';
+import { should } from 'chai';
 
 describe('GFMTaskLists', () => {
   let $element: JQuery;
+  let sandbox: Sinon.SinonSandbox;
 
   const markdown: [string] = [
     "- [ ] item 1",
@@ -13,6 +14,8 @@ describe('GFMTaskLists', () => {
   ];
 
   const renderMarkdown = (cb) : void => {
+    $element.find('.markdown-editor').val(markdown.join('\n'));
+
     request
       .post('https://api.github.com/markdown')
       .set('Authorization', `Bearer ${GH_ACCESS_TOKEN}`)
@@ -23,14 +26,17 @@ describe('GFMTaskLists', () => {
       })
       .end((err, res) => {
         if (err) {
-          console.error(err);
           return cb(err, res);
         }
 
         $element.find('.rendered-markdown').html(res.text);
         cb()
       });
-  }
+  };
+
+  before(() => {
+    sandbox = sinon.sandbox.create();
+  });
 
   beforeEach(() => {
     $element = $([
@@ -41,16 +47,33 @@ describe('GFMTaskLists', () => {
     ].join('\n'))
   });
 
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('enables task lists', (done) => {
-    renderMarkdown(() => {
-      const html = $element.find('.rendered-markdown').html();
-      console.log(html);
+    renderMarkdown((err) => {
+      if (err) return done(err);
+
+      $element.gfmTaskList({
+        markdownContainer: '.markdown-editor',
+        renderedContainer: '.rendered-markdown',
+        onUpdate: (updatedMarkdown) => {}
+      });
+
+      const checkboxes = $element.find('.rendered-markdown .task-list-item-checkbox');
+      checkboxes.each((key, value) => {
+        should().not.exist($(value).attr('disabled'));
+      });
+
       done();
     });
   });
 
   it('disables task lists', (done) => {
-    renderMarkdown(() => {
+    renderMarkdown((err) => {
+      if (err) return done(err);
+
       $element.gfmTaskList({
         markdownContainer: '.markdown-editor',
         renderedContainer: '.rendered-markdown',
@@ -70,15 +93,26 @@ describe('GFMTaskLists', () => {
 
   describe('clicking a rendered checkbox', () => {
     it('updates markdown when rendered checkbox is checked', (done) => {
-      renderMarkdown(() => {
+      const updateStub = sandbox.stub();
+      const expectedMarkdown = [];
+      expectedMarkdown.push(...markdown);
+      expectedMarkdown[0] = "- [x] item 1"
+
+      renderMarkdown((err) => {
+        if (err) return done(err);
+
         $element.gfmTaskList({
           markdownContainer: '.markdown-editor',
           renderedContainer: '.rendered-markdown',
-          onUpdate: (updatedMarkdown) => {}
+          onUpdate: updateStub
         });
 
         const firstCheckbox = $element.find('.rendered-markdown .task-list-item-checkbox').eq(0);
-        firstCheckbox.trigger('change')
+        firstCheckbox.prop('checked', true);
+        firstCheckbox.trigger('change');
+
+        updateStub.callCount.should.equal(1);
+        updateStub.firstCall.args[0].should.equal(expectedMarkdown.join('\n'));
 
         done();
       });
@@ -89,6 +123,14 @@ describe('GFMTaskLists', () => {
     it('updates correct checkbox when value is duplicated between items in same list')
 
     it('updates correct checkbox when value is duplicated between items in separate lists')
+
+    it('updates correct checkbox when value is nested')
+
+    it('emits "tasklist:change" event when checkbox is clicked')
+
+    it('does not emit "tasklist:changed" event when event has "preventDefault()" called on it')
+
+    it('does not update markdown when event has "preventDefault()" called on it')
   });
 
   it('throws if instance is missing when calling gfmTaskList methods')

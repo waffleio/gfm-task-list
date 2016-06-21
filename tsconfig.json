@@ -18,9 +18,11 @@
   "files": [
     "./typings/index.d.ts",
     "development/development.ts",
-    "spec/spec-helper.ts",
     "spec/main-spec.ts",
     "src/custom-typings.d.ts",
     "src/main.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
