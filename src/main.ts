@@ -1,28 +1,28 @@
 import './main.scss';
 
 class GFMTaskList {
-  static name:string;
-  private incomplete:string = "[ ]";
-  private complete:string = "[x]";
+  static name: string;
+  private incomplete: string = "[ ]";
+  private complete: string = "[x]";
 
-  private incompletePattern:RegExp = RegExp(this.escapePattern(this.incomplete));
-  private completePattern:RegExp = RegExp(this.escapePattern(this.complete));
-  private itemPattern:RegExp = RegExp(`^(?:\\s*[-+*]|(?:\\d+\\.))?\\s*(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)})(?=\\s)`);
-  private codeFencesPattern:RegExp = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/mg;
-  private itemsInParasPattern:RegExp = RegExp(`^(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)}).+$`, 'g');
+  private incompletePattern: RegExp = RegExp(this.escapePattern(this.incomplete));
+  private completePattern: RegExp = RegExp(this.escapePattern(this.complete));
+  private itemPattern: RegExp = RegExp(`^(?:\\s*[-+*]|(?:\\d+\\.))?\\s*(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)})(?=\\s)`);
+  private codeFencesPattern: RegExp = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/mg;
+  private itemsInParasPattern: RegExp = RegExp(`^(${this.escapePattern(this.complete)}|${this.escapePattern(this.incomplete)}).+$`, 'g');
 
-  private $element:JQuery;
-  private $markdownContainer:JQuery;
-  private $renderedContainer:JQuery;
-  private onUpdate:any;
+  private $element: JQuery;
+  private $markdownContainer: JQuery;
+  private $renderedContainer: JQuery;
+  private onUpdate: (event: JQueryEventObject) => void;
 
-  constructor ($element:JQuery, settings:GFMTaskListSettings) {
+  constructor ($element: JQuery, settings: GFMTaskListSettings) {
     this.$element = $element;
     this.$markdownContainer = this.$element.find(<JQuery>settings.markdownContainer);
     this.$renderedContainer = this.$element.find(<JQuery>settings.renderedContainer);
 
-    this.onUpdate = (event:JQueryEventObject) => {
-      const update:string = this.updateTaskList($(event.target));
+    this.onUpdate = (event: JQueryEventObject) => {
+      const update: string = this.updateTaskList($(event.target));
       if (update) settings.onUpdate(update);
     };
 
@@ -51,14 +51,14 @@ class GFMTaskList {
     this.$element.trigger('tasklist:disabled');
   }
 
-  private updateTaskListItem (source:string, itemIndex:number, checked:boolean) : string {
-    const clean:string[] = source
+  private updateTaskListItem (source: string, itemIndex: number, checked: boolean) : string {
+    const clean: string[] = source
       .replace(/\r/g, '')
       .replace(this.codeFencesPattern, '')
       .replace(this.itemsInParasPattern, '')
       .split("\n");
 
-    let index:number = 0;
+    let index: number = 0;
     const updatedMarkdown = [];
     for (let line of source.split('\n')) {
       if (clean.indexOf(line) >= 0 && this.itemPattern.test(line)) {
@@ -78,15 +78,15 @@ class GFMTaskList {
   };
 
   private updateTaskList ($item : JQuery) : string {
-    const index = 1 + this.$renderedContainer.find('.task-list-item-checkbox').index($item);
-    const checked = $item.prop('checked');
-    const event = $.Event('tasklist:change');
+    const index: number = 1 + this.$renderedContainer.find('.task-list-item-checkbox').index($item);
+    const checked: boolean = $item.prop('checked');
+    const event: JQueryEventObject = $.Event('tasklist:change');
 
     this.$element.trigger(event, [index, checked]);
 
     if (event.isDefaultPrevented()) return;
 
-    const updatedMarkdown = this.updateTaskListItem(this.$markdownContainer.val(), index, checked);
+    const updatedMarkdown: string = this.updateTaskListItem(this.$markdownContainer.val(), index, checked);
 
     this.$markdownContainer.val(updatedMarkdown);
     this.$markdownContainer.trigger('change');
@@ -94,7 +94,7 @@ class GFMTaskList {
     return updatedMarkdown;
   };
 
-  private escapePattern (str) {
+  private escapePattern (str) : string {
     return str
       .replace(/([\[\]])/g, '\\$1')
       .replace(/\s/, '\\s')
@@ -103,7 +103,7 @@ class GFMTaskList {
 }
 
 namespace jQuery {
-  $.fn.gfmTaskList = function (action:string|GFMTaskListSettings) : JQuery {
+  $.fn.gfmTaskList = function (action: string|GFMTaskListSettings) : JQuery {
     let instance = $.data(this, GFMTaskList.name);
 
     if (typeof action === 'string') {
@@ -115,7 +115,7 @@ namespace jQuery {
       return this;
     }
 
-    let settings:GFMTaskListSettings;
+    let settings: GFMTaskListSettings;
     if (typeof action === 'object') {
       settings = <GFMTaskListSettings>action;
       action = undefined;
