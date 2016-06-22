@@ -11,8 +11,8 @@ jQuery plugin for enabling [GitHub Flavored Markdown (GFM) task lists](https://g
 You can find the built library in [npmcdn](https://npmcdn.com). You may either download them and serve them from your app or load them directly from npmcdn.
 #### npmcdn
 ```html
-<link href="https://npmcdn.com/gfm-task-list@1.0.2/dist/gfm-task-list.min.css" rel="stylesheet" type="text/css"></link>
-<script src="https://npmcdn.com/gfm-task-list@1.0.2/dist/gfm-task-list.min.js"></script>
+<link href="https://npmcdn.com/gfm-task-list@1.0.3/dist/gfm-task-list.min.css" rel="stylesheet" type="text/css"></link>
+<script src="https://npmcdn.com/gfm-task-list@1.0.3/dist/gfm-task-list.min.js"></script>
 ```
 
 ### Usage
