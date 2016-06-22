@@ -23,7 +23,7 @@ const baseConfig = {
 
   module: {
     loaders: [
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader") },
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader") },
       { test: /\.ts$/, loader: 'awesome-typescript-loader' }
     ]
   },
