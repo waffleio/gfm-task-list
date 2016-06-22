@@ -34,6 +34,13 @@ $('.container').gfmTaskList({
   renderedContainer: '.rendered-markdown'
 });
 ```
+##### Configuration Properties
+Property | Required | Type | Behavior
+--- | --- | --- | ---
+`markdownContainer` | `true` | `String | jQuery` | A string CSS selector or a jQuery element denoting which element contains the raw markdown.
+`renderedContainer` | `true` | `String | jQuery` | A string CSS selector or a jQuery element denoting which element contains the rendered markdown.
+`onUpdate` | `false` | `function` | A callback function that receives one argument of type string that is the updated markdown after a checkbox has been updated.
+
 Once initialized, the task list check boxes will be enabled and any change in the state of the checkboxes within the rendered container will be reflected in the markdown in the markdown container.
 #### Handling Task List Updates
 You can handle updates by either passing an `onUpdate` callback at the time of initialization:
